@@ -1,5 +1,4 @@
 .vscode
-notebooks
 __pycache__/
 
 *.npy
