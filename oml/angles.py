@@ -319,3 +319,20 @@ def euler6tomarix4d(a_R):
         1e-5)), "Matrix R (4x4) should be orthogonal!"
 
     return R
+
+
+def rotations_equal(R1, R2):
+    R1 = list(map(lambda x: x % (2*np.pi), R1))
+    R2 = list(map(lambda x: x % (2*np.pi), R2))
+
+    r = (
+        lambda i: R1[i]+R2[i] -
+        2*(np.round(R1[i]-R2[i], 2) % np.round(np.pi, 2) == 0) * R2[i])
+
+    rd1 = np.round(np.round(r(0)+r(5), 2) % np.round(2*np.pi, 2), 2)
+    rd2 = np.round(np.round(r(1)+r(4), 2) % np.round(2*np.pi, 2), 2)
+    rd3 = np.round(np.round(r(2)+r(3), 2) % np.round(2*np.pi, 2), 2)
+
+    r = (rd1+rd2+rd3) % (3*np.round(np.pi, 2))
+
+    return round(r, 1) == 0

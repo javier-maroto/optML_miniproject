@@ -1,11 +1,13 @@
 import logging
+import os
 import numpy as np
+import pandas as pd
 from oml.angles import quaternion2euler
 from oml.alignment import training_angle_alignment
 
 
 def main_alignment(seed, transposed=True):
-    logging.basicConfig(filename='logs/alignment.log',level=logging.INFO)
+    logging.basicConfig(filename='logs/alignment.log', level=logging.INFO)
 
     quaternion_predicted = np.load("data/predicted_quaternions2.npy")
 
@@ -28,6 +30,14 @@ def main_alignment(seed, transposed=True):
     logging.info(f"m = {m[0]}")
     logging.info(f"R = {rotation[0].numpy()}")
     logging.info(f"loss = {loss}")
+
+    if not os.path.exists('results/alignment/loss.csv'):
+        df = pd.DataFrame(columns=['seed', 'final_loss'])
+        df.to_csv('results/alignment/loss.csv', index=False)
+    else:
+        df = pd.read_csv('results/alignment/loss.csv')
+        df = df.append({'seed': seed, 'final_loss': loss}, ignore_index=True)
+        df.to_csv('results/alignment/loss.csv', index=False)
 
 
 if __name__ == "__main__":
