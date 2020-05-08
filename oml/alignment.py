@@ -27,7 +27,7 @@ def update_quaternion(m, a_R, q_old, transposed=True):
     return q_new
 
 
-def loss_alignment(m, a_R, q_predicted, q_true, transposed):
+def loss_alignment(m, a_R, q_predicted, q_true):
     """Loss for optimization"""
     # 4D matrix rotation
     R = euler6tomarix4d(a_R)
