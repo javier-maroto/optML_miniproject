@@ -19,7 +19,7 @@ Goal: estimate 6D vector for 4D alignment rotation
 - [x] There is no unique solution for this optimization mehtod
   - method to compare if 2 rotations are the same
   - method for grouping same rotations (finding unique angle representative)
-  - 
+  
 - [x] Different result visualizations to visualize the alignment of angles
   - visualize optimization iterations on the polar plot
   - visualize optimization iterations on the rotation vector plot
@@ -36,6 +36,7 @@ Goal: estimate 6D vector for 4D alignment rotation
   - 1e-02 current, add several others 
   - make trajectory comparison on one plot with the same starting point
 - [ ] Explore the solution of transposed angles and check why it never converges to optimum (therefore we need a flip)
+- [ ] Clean-up the code and notebooks with quick overview of performance, leave only the neccessary ones
 
 # Misc theory
 - Z-Y-Z rotations: explain what each angle means
