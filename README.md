@@ -44,6 +44,7 @@ Goal: estimate 6D vector for 4D alignment rotation
 - conversion: euler angle <-> quaternion
 - $d_q$: distanece between 2 quaternions
 - 4D rotation in SO(4) equations, explain why not 3D rotation
+- Every 3x3 matrix that supports $R^{-1} = R^T$ is a rotation matrix
 - Transposed angles: if we have $R = R_z(\alpha)R_y(\beta)R_z(\gamma)$ where $R$ is 3D matrix, then it's transpose can be obtained with following angles $R^T = R_z(-\gamma)R_y(-\beta)R_z(-\alpha)$.
 - Flip (global reflection): $R = R^T * [-1, -1, -1, 1]$
 
