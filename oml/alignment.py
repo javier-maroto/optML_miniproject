@@ -1,11 +1,11 @@
 import logging
 import tensorflow as tf
 import numpy as np
-from oml.angles import euler6tomarix4d, d_q, euler2quaternion
-from tensorflow.keras.optimizers import Adam
+from .angles import euler6tomarix4d, d_q, euler2quaternion
 import time
 import seaborn as sns
 import matplotlib.pyplot as plt
+from pathlib import Path
 
 
 def update_quaternion(m, a_R, q_old, transposed=True):
@@ -40,17 +40,20 @@ def loss_alignment(m, a_R, q_predicted, q_true):
 def gradient_alignment(m, a_R, q_predicted, q_true, transposed):
     """Gradion for optimization"""
     with tf.GradientTape() as tape:
-        loss_value = loss_alignment(m, a_R, q_predicted, q_true, transposed)
+        loss_value = loss_alignment(m, a_R, q_predicted, q_true)
         gradient = tape.gradient(loss_value, a_R)
 
     return loss_value, gradient
 
 
 def training_angle_alignment(
-        m, steps, batch_size, projection_idx, learning_rate,
+        m, steps, batch_size, projection_idx, optimizer,
         angles_true, angles_predicted, transposed=True, seed=0):
     """Optimization"""
-    optimizer = Adam(learning_rate=learning_rate)
+    opt_name = optimizer.__class__.__name__
+    lr = optimizer.lr.numpy()
+    Path(f"results/alignment/plots/{opt_name}").mkdir(parents=True, exist_ok=True)
+    Path(f"results/alignment/trajectories/{opt_name}").mkdir(parents=True, exist_ok=True)
 
     time_start = time.time()
 
@@ -80,10 +83,6 @@ def training_angle_alignment(
         optimizer.apply_gradients(zip(gradients, a_R))
         trajectory[step, :] = a_R[0].numpy()
 
-        update_lr = 300
-        if ((step > update_lr) and (step % update_lr == 0) and
-                (losses[step-1]-losses[step-1-update_lr+100] < 0.1)):
-            learning_rate *= 0.1
 
         # Visualize progress periodically
         if step % 10 == 0:
@@ -117,7 +116,7 @@ def training_angle_alignment(
             axs[1].set_ylabel('loss')
             axs[1].set_title(
                 f"Angle alignment optimization \nLOSS={loss:.2e} "
-                f"LR={learning_rate:.2e}")
+                f"LR={lr:.2e}")
 
             # Distance count subplot (full)
             q_predicted_rot = update_quaternion(
@@ -137,17 +136,17 @@ def training_angle_alignment(
             max_count = int(max([h.get_height() for h in s.patches]))
             axs[2].plot(
                 [np.mean(d2)]*max_count, np.arange(0, max_count), c="r", lw=4)
-            fig.savefig(f'results/alignment/plots/training_{seed}.png')
+            fig.savefig(f'results/alignment/plots/{opt_name}/training_{seed}.png')
 
         # Periodically report progress.
         if ((step % (steps//10)) == 0) or (step == steps):
             time_elapsed = time.time() - time_start
-            logging.info(
+            logging.debug(
                 f'step {step}/{steps} ({time_elapsed:.0f}s): '
                 f'loss = {np.mean(losses[step-steps//10:step-1]):.2e}')
 
         if step >= 101 and np.mean(losses[step-101:step-1]) < 1e-3:
             break
     np.save(
-        f"results/alignment/trajectories/{seed}.npy", trajectory[:step + 1])
+        f"results/alignment/trajectories/{opt_name}/{seed}.npy", trajectory[:step + 1])
     return m, a_R, np.mean(losses[-1-steps//10:-1])
