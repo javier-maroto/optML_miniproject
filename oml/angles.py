@@ -336,3 +336,69 @@ def rotations_equal(R1, R2):
     r = (rd1+rd2+rd3) % (3*np.round(np.pi, 2))
 
     return round(r, 1) == 0
+
+
+def create_unique_angle(point, ret_full=False):
+    """Constructs the equivalent 6d vector with all positive components
+    such that their sum is minimum"""
+    add_pi = lambda x: x + np.pi
+    opp = lambda x: -x
+    opp_pi = lambda x: np.pi - x
+    idd = lambda x: x
+    LIST_FUN = [idd, opp, add_pi, opp_pi]
+    LIST_EQUIV = [
+        [0, 0, 0, 0, 0, 0],
+        [0, 0, 0, 2, 3, 2],
+        [0, 0, 2, 0, 3, 2],
+        [0, 0, 2, 2, 0, 0],
+        [0, 2, 1, 1, 2, 0],
+        [0, 2, 1, 3, 1, 2],
+        [0, 2, 3, 1, 1, 2],
+        [0, 2, 3, 3, 2, 0],
+        [2, 1, 1, 1, 1, 2],
+        [2, 1, 1, 3, 2, 0],
+        [2, 1, 3, 1, 2, 0],
+        [2, 1, 3, 3, 1, 2],
+        [2, 3, 0, 0, 3, 2],
+        [2, 3, 0, 2, 0, 0],
+        [2, 3, 2, 0, 0, 0],
+        [2, 3, 2, 2, 3, 2]
+    ]
+    p = [x % (2 * np.pi) for x in point]
+    best_sum = np.inf
+    best_point = None
+    best_eq = None
+    diff_1 = np.array(p) - np.array(point)
+    diff_2 = np.zeros(6)
+    for eq in LIST_EQUIV:
+        x = np.zeros_like(p)
+        _diff_2 = np.zeros(6)
+        for i in range(6):
+            x[i] = LIST_FUN[eq[i]](p[i])
+            if x[i] < 0:
+                x[i] += 2 * np.pi
+                _diff_2[i] += 2 * np.pi
+            elif x[i] > (2 * np.pi):
+                x[i] -= 2 * np.pi
+                _diff_2[i] -= 2 * np.pi
+        if sum(x) == best_sum:
+            # Ties are solved by smaller first components
+            for i in range(6):
+                if x[i] == best_point[i]:
+                    continue
+                elif x[i] < best_point[i]:
+                    best_point = x
+                    best_eq = eq
+                    diff_2 = _diff_2.copy()
+                    break
+                else:
+                    break
+        elif sum(x) < best_sum:
+            best_point = x
+            best_sum = sum(x)
+            best_eq = eq
+            diff_2 = _diff_2.copy()
+    if ret_full:
+        best_eq = [LIST_FUN[best_eq[i]] for i in range(6)]
+        return best_point, best_eq, diff_1, diff_2
+    return best_point
