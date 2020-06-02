@@ -26,16 +26,18 @@ Goal: estimate 6D vector for 4D alignment rotation
   
 - [x] Solver for a 4D rotation matrix
   - wasn't able to calculate unique solution for 16 equations
-  
-# Todo:
-- [ ] project title
-- [ ] Test different optimizers (with e.g. 1e-02 learning rate)
-  - Adam vs. SGD vs. RMSProp vs. Stochastic Frank Wolfe vs. etc.
+
+- [x] project title
+- [x] Test different optimizers (with e.g. 1e-02 learning rate)
+  - Adam vs. SGD vs. RMSProp vs. etc.
   - make trajectory comparison on one plot with the same starting point
-- [ ] Test different learning rates (with e.g. Adam)
+- [x] Test different learning rates (with e.g. Adam)
   - 1e-02 current, add several others 
   - make trajectory comparison on one plot with the same starting point
-- [ ] Explore the solution of transposed angles and check why it never converges to optimum (therefore we need a flip)
+- [x] Explore the solution of transposed angles and check why it never converges to optimum (therefore we need a flip)
+  
+# Todo:
+- [ ] Organize nitebooks and remove code from them
 - [ ] Clean-up the code and notebooks with quick overview of performance, leave only the neccessary ones
 
 # Misc theory
@@ -47,4 +49,9 @@ Goal: estimate 6D vector for 4D alignment rotation
 - Every 3x3 matrix that supports $R^{-1} = R^T$ is a rotation matrix
 - Transposed angles: if we have $R = R_z(\alpha)R_y(\beta)R_z(\gamma)$ where $R$ is 3D matrix, then it's transpose can be obtained with following angles $R^T = R_z(-\gamma)R_y(-\beta)R_z(-\alpha)$.
 - Flip (global reflection): $R = R^T * [-1, -1, -1, 1]$
+
+# Loss Variation
+The first two angles of a 6D vector are varying, the other four angles are fixed.
+
+![](solution_space_2D.gif)
 
