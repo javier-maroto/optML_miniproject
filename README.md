@@ -53,5 +53,5 @@ Goal: estimate 6D vector for 4D alignment rotation
 # Loss Variation
 The first two angles of a 6D vector are varying, the other four angles are fixed.
 
-![](solution_space_2D.gif)
+![](images/solution_space_2D.gif)
 
