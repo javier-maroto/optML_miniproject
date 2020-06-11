@@ -1,6 +1,44 @@
-# TODO: title
+# Exploring the Solution Space of Aligning Two Sets of 3D Rotation Angles
 
-# Done:
+The goal of our project is to explore the performance of different algorithms on our non-convex problem: aligning two sets of 3-dimensional rotation angles. The current results obtained on different combination of settings used and experimental conditions can be found in this repository.
+
+## Report
+More details on experiments performed and implementation can be found in the [report]().
+
+## Getting Started
+Download and install [Anaconda](https://www.anaconda.com/products/individual) on your machine. Note: Python 3.6+.
+Then open the terminal and do following:
+```
+# clone the repo
+$ https://github.com/javier-maroto/optML_miniproject.git
+
+# install git lfs support for files
+$ git lfs install
+# download the files
+$ git lfs fetch
+# updates the files in the local directory
+$ git lfs pull
+
+# position yourself inside the project
+$ cd optML_miniproject
+
+# create environment
+$ conda env create -f environment.yml
+
+# activate environment
+$ conda activate angle_alignment
+```
+
+## Notebooks
+1. [Discovering non-convexity]()
+2. [Limited solution space visualizations]()
+3. [Proposal of another optimization equation]()
+4. [Test rotation similarity and finding unique angles]()
+5. [Exploration]()
+6. [Dimensionality reduction methods]()
+7. [Scatter and points???]()
+
+## Milestones
 Optimization settings:
 - true angles and predicted angles (without a flip)
 - optimizer = Adam
@@ -35,23 +73,23 @@ Goal: estimate 6D vector for 4D alignment rotation
   - 1e-02 current, add several others 
   - make trajectory comparison on one plot with the same starting point
 - [x] Explore the solution of transposed angles and check why it never converges to optimum (therefore we need a flip)
-  
-# Todo:
-- [ ] Organize nitebooks and remove code from them
+
+Technical:
+- [x] Organize nitebooks and remove code from them
+- [x] Add git LFS support so results can be reproduced
+
+Todo:
 - [ ] Clean-up the code and notebooks with quick overview of performance, leave only the neccessary ones
+- [ ] 3 notebooks left to comment: exploration, projections(now dimensionality reduction), scatter end points
+- [ ] main.py contains only best performing setup, put current code inside package
 
-# Misc theory
-- Z-Y-Z rotations: explain what each angle means
-- quaternions and $S^3$ space
-- conversion: euler angle <-> quaternion
-- $d_q$: distanece between 2 quaternions
-- 4D rotation in SO(4) equations, explain why not 3D rotation
-- Every 3x3 matrix that supports $R^{-1} = R^T$ is a rotation matrix
-- Transposed angles: if we have $R = R_z(\alpha)R_y(\beta)R_z(\gamma)$ where $R$ is 3D matrix, then it's transpose can be obtained with following angles $R^T = R_z(-\gamma)R_y(-\beta)R_z(-\alpha)$.
-- Flip (global reflection): $R = R^T * [-1, -1, -1, 1]$
 
-# Loss Variation
-The first two angles of a 6D vector are varying, the other four angles are fixed.
-
+## Loss Variation
+Solution space of first 3 vector values visualized in 2D and 3D:
 ![](./images/solution_space_2D.gif)
 ![](./images/solution_space3d.gif)
+
+## Team
+- [Javier Alejandro Maroto Morales](https://people.epfl.ch/javier.marotomorales/?lang=en), javier.marotomorales@epfl.ch
+- [Jelena Banjac](https://jelenabanjac.com/), jelena.banjac@epfl.ch
+
