@@ -11,10 +11,10 @@ import itertools
 
 LOCK = Lock()
 
-def evaluate_and_save_performance(seed, optimizer, transposed=True):
+def evaluate_and_save_performance(seed, optimizer):
     # Setup
     quaternion_predicted = np.load("data/predicted_quaternions2.npy")
-    angles_predicted = quaternion2euler(quaternion_predicted, transposed)
+    angles_predicted = quaternion2euler(quaternion_predicted)
     angles_true = np.load("data/angles_true.npy")
     NUM_PROJECTIONS = len(angles_true)
 

@@ -12,6 +12,7 @@ from itertools import product
 import time
 from IPython import display as IPyDisplay
 from scipy.spatial.transform import Rotation as R
+from oml.angles import euler2quaternion, d_q
 
 
 def euler6tomarix4d(a_R1, a_R2):

@@ -1,4 +1,3 @@
-*.npz
 notebooks/.ipynb_checkpoints/
 .ipynb_checkpoints
 .vscode
@@ -6,7 +5,5 @@ notebooks/.ipynb_checkpoints/
 __pycache__/
 notebooks/.ipynb_checkpoints/
 
-*.npy
 *.log
 *.png
-*.csv
