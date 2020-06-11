@@ -11,7 +11,7 @@ import itertools
 
 LOCK = Lock()
 
-def train_alignment(seed, optimizer, transposed=True):
+def evaluate_and_save_performance(seed, optimizer, transposed=True):
     # Setup
     quaternion_predicted = np.load("data/predicted_quaternions2.npy")
     angles_predicted = quaternion2euler(quaternion_predicted, transposed)
@@ -24,14 +24,13 @@ def train_alignment(seed, optimizer, transposed=True):
         'batch_size': 256,
         'projection_idx': range(NUM_PROJECTIONS),
         'angles_true': angles_true,
-        'angles_predicted': angles_predicted,
-        'transposed': False
+        'angles_predicted': angles_predicted
     }
 
     optimizer = optimizer(learning_rate=0.1)
     opt_name = optimizer.__class__.__name__
     # Optimization algorithm
-    m, rotation, loss = training_angle_alignment(
+    rotation, loss, collect_data, trajectory = training_angle_alignment(
         optimizer=optimizer,
         seed=seed,
         **kwargs)
@@ -55,5 +54,5 @@ if __name__ == "__main__":
     list_optimizers = (Adam, RMSprop, SGD, Adagrad, Adamax, Ftrl, Nadam)
     with Pool(processes=len(list_optimizers)) as p:
         for i in np.arange(66, 1000):
-            p.starmap(train_alignment, itertools.product([i], list_optimizers))
+            p.starmap(evaluate_and_save_performance, itertools.product([i], list_optimizers))
         
