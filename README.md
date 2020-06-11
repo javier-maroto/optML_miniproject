@@ -88,3 +88,8 @@ Todo:
 Solution space of first 3 vector values visualized in 2D and 3D:
 ![](./images/solution_space_2D.gif)
 ![](./images/solution_space3d.gif)
+
+## Team
+- [Javier Alejandro Maroto Morales](https://people.epfl.ch/javier.marotomorales/?lang=en), javier.marotomorales@epfl.ch
+- [Jelena Banjac](https://jelenabanjac.com/), jelena.banjac@epfl.ch
+
