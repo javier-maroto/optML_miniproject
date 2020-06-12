@@ -30,13 +30,24 @@ $ conda activate angle_alignment
 ```
 
 ## Notebooks
-1. [Discovering non-convexity]()
-2. [Limited solution space visualizations]()
-3. [Proposal of another optimization equation]()
-4. [Critical point analysis]()
-5. [Test rotation similarity and finding unique angles]()
+1. [Discovering non-convexity](https://nbviewer.jupyter.org/github/javier-maroto/optML_miniproject/blob/master/notebooks/angle_alignment_nonconvex.ipynb)
+2. [Limited solution space visualizations](https://nbviewer.jupyter.org/github/javier-maroto/optML_miniproject/blob/master/notebooks/angle_alignment_limited_solution_space.ipynb)
+3. [Proposal of another optimization equation](https://nbviewer.jupyter.org/github/javier-maroto/optML_miniproject/blob/master/notebooks/angle_alignment_another_equation_proposal.ipynb)
+4. [Critical point analysis](https://nbviewer.jupyter.org/github/javier-maroto/optML_miniproject/blob/master/notebooks/critical_point_analysis.ipynb)
+5. [Test rotation similarity and finding unique angles](https://nbviewer.jupyter.org/github/javier-maroto/optML_miniproject/blob/master/notebooks/test_rotation_similarity_and_unique_angle.ipynb)
 
-## Milestones
+
+## Loss Variation
+Solution space of first 3 vector values visualized in 2D and 3D:
+![](./images/solution_space_2D.gif)
+![](./images/solution_space3d.gif)
+
+## Team
+- [Javier Alejandro Maroto Morales](https://people.epfl.ch/javier.marotomorales/?lang=en), javier.marotomorales@epfl.ch
+- [Jelena Banjac](https://jelenabanjac.com/), jelena.banjac@epfl.ch
+
+
+## Internal Milestones
 Optimization settings:
 - true angles and predicted angles (without a flip)
 - optimizer = Adam
@@ -75,14 +86,3 @@ Goal: estimate 6D vector for 4D alignment rotation
 Technical:
 - [x] Organize nitebooks and remove code from them
 - [x] Add git LFS support so results can be reproduced
-
-
-## Loss Variation
-Solution space of first 3 vector values visualized in 2D and 3D:
-![](./images/solution_space_2D.gif)
-![](./images/solution_space3d.gif)
-
-## Team
-- [Javier Alejandro Maroto Morales](https://people.epfl.ch/javier.marotomorales/?lang=en), javier.marotomorales@epfl.ch
-- [Jelena Banjac](https://jelenabanjac.com/), jelena.banjac@epfl.ch
-
