@@ -169,11 +169,14 @@ def gradient_alignment(m, a_R, q_predicted, q_true):
 
 def training_angle_alignment(
         m, steps, batch_size, optimizer,
-        angles_true, angles_predicted, projection_idx=None, seed=0, plot_interactive=False):
+        angles_true, angles_predicted, projection_idx=None, seed=0, plot_interactive=False,
+        save_id=None):
     """Optimization
     
     
     """
+    if save_id is None:
+        save_id = seed
     collect_data = []
     
     opt_name = optimizer.__class__.__name__
@@ -283,7 +286,7 @@ def training_angle_alignment(
         if step >= 101 and np.mean(losses[step-101:step-1]) < 1e-3:
             break;
     np.save(
-        f"results/alignment/trajectories/{opt_name}/{seed}.npy", trajectory[:step + 1])
+        f"results/alignment/trajectories/{opt_name}/{save_id}.npy", trajectory[:step + 1])
     
     return a_R, np.mean(losses[-1-steps//10:-1]), np.array(collect_data), trajectory
 

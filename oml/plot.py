@@ -77,3 +77,109 @@ def plot_alignment(paths, w_good=50, resolution=(50, 50)):
     ax.set_title('Contours Plot')
     fig.savefig(save_path)
     plt.close()
+
+
+def plot_alignment_lr(p_traj, opt_name, w_good=50, resolution=(50, 50)):
+    # Setup
+    q_pred = np.load("data/predicted_quaternions2.npy")
+    angles_true = np.load("data/angles_true.npy")
+    q_true = euler2quaternion(angles_true)
+    good_point = np.load(f'results/alignment/trajectories/Adagrad/1.npy')[-1, :]
+    tt = {}
+    save_path = f"results/alignment/lr_{opt_name}.png"
+    
+    tt2 = {}
+    for path in p_traj:
+        opt = float(str(path).split('/')[-1].split('_')[0])
+        tt2[opt] = np.load(path)
+    
+    points = []
+    for k, t in tt2.items():
+        _, fun, diff1, diff2 = create_unique_angle(t[0], ret_full=True)
+        t = np.array([[fun[i](tt2[i] + diff1[i]) + diff2[i] for i in range(6)] for tt2 in t])
+        points += list(t)
+        tt2[k] = t
+
+    points = np.stack(points + [good_point] * w_good)
+    model = PCA(n_components=2)
+    p = model.fit_transform(points)
+    ls_dim = lambda dim: np.linspace(p[:, dim].min(), p[:, dim].max(), resolution[dim])
+    X, Y = np.meshgrid(ls_dim(0), ls_dim(1))
+    Z = np.zeros_like(X)
+    for i in range(X.shape[0]):
+        for j in range(X.shape[1]):
+            angle = model.inverse_transform((X[i, j], Y[i, j]))
+            angle = [tf.Variable(angle)]
+            Z[i,j] = loss_alignment([1., 1., 1., 1.], angle, q_pred, q_true)
+
+    # Plot
+    fig, ax = plt.subplots(1, 1, figsize=(10, 10))
+    cp = ax.contourf(X, Y, Z, levels=np.linspace(0, np.pi, 40), cmap='Blues')
+    c = plt.cm.YlOrRd(np.linspace(0, 1, num=len(tt2)))
+    for i, (k, t) in enumerate(sorted(tt2.items())):
+        t = model.transform(t)
+        loss = (
+            pd.read_csv(f"results/alignment/loss_lr_{opt_name}.csv").query(f"lr == {k}").final_loss.values[0])
+        ax.plot(
+            t[:, 0], t[:, 1], lw=2, label=f"{k} (loss={loss:.3f})", color=c[i], alpha=0.8,
+            path_effects=[pe.Stroke(linewidth=3, foreground='white', alpha=0.5), pe.Normal()])
+        ax.scatter(t[0, 0], t[0, 1], color='white', zorder=3)
+        ax.scatter(t[-1, 0], t[-1, 1], color='black')
+    fig.legend(loc='lower center', mode='expand', ncol=4)
+    fig.colorbar(cp) # Add a colorbar to a plot
+    ax.set_title('Contours Plot')
+    fig.savefig(save_path)
+    plt.close()
+
+
+def plot_alignment_power(p_traj, w_good=50, resolution=(50, 50)):
+    # Setup
+    q_pred = np.load("data/predicted_quaternions2.npy")
+    angles_true = np.load("data/angles_true.npy")
+    q_true = euler2quaternion(angles_true)
+    good_point = np.load(f'results/alignment/trajectories/Adagrad/1.npy')[-1, :]
+    tt = {}
+    save_path = f"results/alignment/lr_ftrl_power.png"
+    
+    tt2 = {}
+    for path in p_traj:
+        opt = float(str(path).split('/')[-1].split('_')[0])
+        tt2[opt] = np.load(path)
+    
+    points = []
+    for k, t in tt2.items():
+        _, fun, diff1, diff2 = create_unique_angle(t[0], ret_full=True)
+        t = np.array([[fun[i](tt2[i] + diff1[i]) + diff2[i] for i in range(6)] for tt2 in t])
+        points += list(t)
+        tt2[k] = t
+
+    points = np.stack(points + [good_point] * w_good)
+    model = PCA(n_components=2)
+    p = model.fit_transform(points)
+    ls_dim = lambda dim: np.linspace(p[:, dim].min(), p[:, dim].max(), resolution[dim])
+    X, Y = np.meshgrid(ls_dim(0), ls_dim(1))
+    Z = np.zeros_like(X)
+    for i in range(X.shape[0]):
+        for j in range(X.shape[1]):
+            angle = model.inverse_transform((X[i, j], Y[i, j]))
+            angle = [tf.Variable(angle)]
+            Z[i,j] = loss_alignment([1., 1., 1., 1.], angle, q_pred, q_true)
+
+    # Plot
+    fig, ax = plt.subplots(1, 1, figsize=(10, 10))
+    cp = ax.contourf(X, Y, Z, levels=np.linspace(0, np.pi, 40), cmap='Blues')
+    c = plt.cm.YlOrRd(np.linspace(0, 1, num=len(tt2)))
+    for i, (k, t) in enumerate(sorted(tt2.items())):
+        t = model.transform(t)
+        loss = (
+            pd.read_csv("results/alignment/loss_lr_power.csv").query(f"lr == {k}").final_loss.values[0])
+        ax.plot(
+            t[:, 0], t[:, 1], lw=2, label=f"{k} (loss={loss:.3f})", color=c[i], alpha=0.8,
+            path_effects=[pe.Stroke(linewidth=3, foreground='white', alpha=0.5), pe.Normal()])
+        ax.scatter(t[0, 0], t[0, 1], color='white', zorder=3)
+        ax.scatter(t[-1, 0], t[-1, 1], color='black')
+    fig.legend(loc='lower center', mode='expand', ncol=4)
+    fig.colorbar(cp) # Add a colorbar to a plot
+    ax.set_title('Contours Plot')
+    fig.savefig(save_path)
+    plt.close()

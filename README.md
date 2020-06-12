@@ -34,6 +34,14 @@ To run the experiment that compares the performance of different optimizers use 
 ```
 $ python main.py
 ```
+If instead want to recreate the plots for different learning rates (Ftrl and Adagrad) or learning rate powers (Ftrl) run:
+```
+$ python main_lr.py
+```
+or
+```
+$ python main_power.py
+```
 Other experiments can be found in the following notebooks:
 1. [Discovering non-convexity](https://nbviewer.jupyter.org/github/javier-maroto/optML_miniproject/blob/master/notebooks/angle_alignment_nonconvex.ipynb)
 2. [Limited solution space visualizations](https://nbviewer.jupyter.org/github/javier-maroto/optML_miniproject/blob/master/notebooks/angle_alignment_limited_solution_space.ipynb)
