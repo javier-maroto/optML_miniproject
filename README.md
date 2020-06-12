@@ -3,7 +3,7 @@
 The goal of our project is to explore the performance of different algorithms on our non-convex problem: aligning two sets of 3-dimensional rotation angles. The current results obtained on different combination of settings used and experimental conditions can be found in this repository.
 
 ## Report
-More details on experiments performed and implementation can be found in the [report]().
+More details on experiments performed and implementation can be found in the [report](report.pdf).
 
 ## Getting Started
 Download and install [Anaconda](https://www.anaconda.com/products/individual) on your machine. Note: Python 3.6+.
