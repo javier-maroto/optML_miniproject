@@ -1,58 +1,33 @@
-import logging
-import os
-import numpy as np
-import pandas as pd
-from oml.angles import quaternion2euler
-from oml.alignment import training_angle_alignment
-from tensorflow.keras.optimizers import Adam, RMSprop, SGD, Adagrad, Adamax, Ftrl, Nadam
-from multiprocessing import Pool, Lock
+"""Generate trajectories and save plots for different optimization algorithms"""
 import itertools
+import logging
+from multiprocessing import Pool
+from pathlib import Path
 
+import numpy as np
+from tensorflow.keras.optimizers import (SGD, Adagrad, Adam, Adamax, Ftrl,
+                                         Nadam, RMSprop)
 
-LOCK = Lock()
-
-def evaluate_and_save_performance(seed, optimizer):
-    # Setup
-    quaternion_predicted = np.load("data/predicted_quaternions2.npy")
-    angles_predicted = quaternion2euler(quaternion_predicted)
-    angles_true = np.load("data/angles_true.npy")
-    NUM_PROJECTIONS = len(angles_true)
-
-    kwargs = {
-        'm': [1.0, 1.0, 1.0, 1.0],
-        'steps': 1000,
-        'batch_size': 256,
-        'projection_idx': range(NUM_PROJECTIONS),
-        'angles_true': angles_true,
-        'angles_predicted': angles_predicted
-    }
-
-    optimizer = optimizer(learning_rate=0.1)
-    opt_name = optimizer.__class__.__name__
-    # Optimization algorithm
-    rotation, loss, collect_data, trajectory = training_angle_alignment(
-        optimizer=optimizer,
-        seed=seed,
-        **kwargs)
-
-    # Save loss
-    loss_file_path = f'results/alignment/loss_{opt_name}.csv'
-    if not os.path.exists(loss_file_path):
-        df = pd.DataFrame(columns=['seed', 'final_loss'])
-    else:
-        df = pd.read_csv(loss_file_path)
-    df = df.append({'seed': seed, 'final_loss': loss}, ignore_index=True)
-    LOCK.acquire()
-    df.to_csv(loss_file_path, index=False)
-    print(f"\t{opt_name} ROC: {(df.final_loss.values < 1).mean() * 100:.2f} %")  # ROC: rate of convergence
-    LOCK.release()
-
+from oml.evaluate import evaluate_and_save_performance
+from oml.plot import plot_alignment
 
 if __name__ == "__main__":
     # Logging
     logging.basicConfig(filename='logs/alignment.log', level=logging.INFO)
     list_optimizers = (Adam, RMSprop, SGD, Adagrad, Adamax, Ftrl, Nadam)
+    tp = Path('results/alignment/trajectories')
     with Pool(processes=len(list_optimizers)) as p:
-        for i in np.arange(66, 1000):
+        for i in np.arange(1, 100):
+            # Generate trajectory numpy files
             p.starmap(evaluate_and_save_performance, itertools.product([i], list_optimizers))
-        
+            # Save trajectory plots
+            plot_alignment(list(tp.glob(f"*/{i}.npy")))
+            # Sanity check (all trajectories share initial point for the seed chosen)
+            first = None
+            for opt in list_optimizers:
+                opt_name = opt.__name__
+                first2 = np.load(f'results/alignment/trajectories/{opt_name}/{i}.npy')[0, :]
+                if first is None:
+                    first = first2
+                    continue
+                assert (first == first2).all()

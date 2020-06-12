@@ -187,6 +187,7 @@ def training_angle_alignment(
     angles_predicted = tf.convert_to_tensor(angles_predicted)
 
     trajectory = np.zeros([steps + 1, 6])
+    tf.random.set_seed(seed)
     euler = tf.random.uniform([6], 0, 2*np.pi, dtype=tf.float64, seed=seed)
     a_R = [tf.Variable(euler)]
     trajectory[0, :] = a_R[0].numpy()

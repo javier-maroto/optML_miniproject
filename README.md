@@ -33,10 +33,8 @@ $ conda activate angle_alignment
 1. [Discovering non-convexity]()
 2. [Limited solution space visualizations]()
 3. [Proposal of another optimization equation]()
-4. [Test rotation similarity and finding unique angles]()
-5. [Exploration]()
-6. [Dimensionality reduction methods]()
-7. [Scatter and points???]()
+4. [Critical point analysis]()
+5. [Test rotation similarity and finding unique angles]()
 
 ## Milestones
 Optimization settings:
@@ -77,11 +75,6 @@ Goal: estimate 6D vector for 4D alignment rotation
 Technical:
 - [x] Organize nitebooks and remove code from them
 - [x] Add git LFS support so results can be reproduced
-
-Todo:
-- [ ] Clean-up the code and notebooks with quick overview of performance, leave only the neccessary ones
-- [ ] 3 notebooks left to comment: exploration, projections(now dimensionality reduction), scatter end points
-- [ ] main.py contains only best performing setup, put current code inside package
 
 
 ## Loss Variation
